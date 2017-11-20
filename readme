@@ -1,0 +1,18 @@
+The main code was written by Mike Spivey.
+
+To compile, run
+ghc Fun -main-is Fun
+
+To have a first try,
+./Fun examples.fun
+
+To get a nice command line, use
+rlwrap ./Fun examples.fun
+
+
+To try the lexer/parser separately, use e.g.
+
+ghci FunParser
+lex_string lexer 1 "interval(a,b);;"
+parse funParser "interval(a,b);;"
+
