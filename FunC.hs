@@ -1,4 +1,4 @@
-module FunMem(main) where
+module FunC(main) where
 import Parsing
 import FunSyntax
 import FunParser
@@ -16,13 +16,20 @@ data Value =
 type Env = Environment Value
 
 type Mem = Memory Value
+etranslatel :: Expr -> Expr
+etranslatel (Contents (Address (Variable x) ) ) = (Variable x)
+
+--etranslatel (Contents (Variable x)) = Contents
+etranslatel e = etranslate e
+
   
 etranslate :: Expr -> Expr
 
-etranslate (Address (Variable x)) = (Variable x)
+--etranslate (Address (Variable x)) = (Variable x)
 
-etranslate (Contents (Variable x)) = 
-etranslate (Assign e1 e2) = Assign e1 (etranslate e2)
+etranslate (Contents (Address (Variable x) ) ) = (Apply (Variable "!") [(Variable x)] )
+
+etranslate (Assign e1 e2) = Assign (etranslatel e1) (etranslate e2)
 {-each assignment x := e in FunC is translated to x := e sharp in FunMem. In
 other words (x := e) sharp = (x := e sharp ).-}
 
@@ -45,6 +52,10 @@ etranslate (While e1 e2) = While (etranslate e1) (etranslate e2)
 
 etranslate (Lambda xs body) = Lambda xs (etranslate body)
 etranslate e = e
+
+--ref1 :: Expr -> Expr
+--ref1 (Address (Variable x)) =  Let  (Val "x" (Apply (Variable "new") []) )  (Sequence (Assign (Variable "x") (Address (Variable x)) )   (Apply (Variable "!") [(Variable "x")] ) )
+--ref1 e =  Let  (Val "x" (Apply (Variable "new") []) )  (Sequence (Assign (Variable "x") (e) )   (Variable "x") )
 
 ref :: Expr -> Expr
 ref e =  Let  (Val "x" (Apply (Variable "new") []) )  (Sequence (Assign (Variable "x") (e) )   (Variable "x") )
@@ -111,7 +122,7 @@ eval (While e1 e2) env mem = f mem
 
 eval (Lambda xs body) env mem =
   (abstract xs body env, mem)
-
+--eval (Contents (Variable x)) = 
 eval e env mem =
   error ("can't evaluate " ++ pretty e)
 
