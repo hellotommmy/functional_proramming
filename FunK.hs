@@ -30,7 +30,9 @@ reverse (x:xs) = reverse xs ++[x]
 revk :: [Int] -> ([Int] -> Answer) -> Answer
 --      [Int] -> M [Int]
 revk [] k  = k []
-revk (x:xs) k = k (revk xs $> (\l -> result (l++[x]) ) )  
+revk (x:xs) k = revk xs (\z ->  k  (z++[x] ) )
+
+
 
 eval :: Expr -> Env -> M Value
 
