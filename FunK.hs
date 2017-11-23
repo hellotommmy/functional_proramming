@@ -26,11 +26,12 @@ type Env = Environment Value
 reverse ::[Int] ->  [Int]
 reverse [] = []
 reverse (x:xs) = reverse xs ++[x]
+ 
 revk :: [Int] -> ([Int] -> Answer) -> Answer
 --      [Int] -> M [Int]
 revk [] k  = k []
-revk (x:xs) k = k (revk xs $> (\l -> x++l) )  
-  
+revk (x:xs) k = k (revk xs $> (\l -> result (l++[x]) ) )  
+
 eval :: Expr -> Env -> M Value
 
 eval (Number n) env = result (IntVal n)
